@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SK LUDO</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#101827;color:#fff;font-family:Arial;text-align:center;padding:12px}
+h1{color:#ffd54a;margin:8px}.panel{max-width:430px;margin:auto}
+#board{display:grid;grid-template-columns:repeat(11,1fr);gap:2px;max-width:430px;margin:14px auto;background:#222;padding:4px}
+.cell{aspect-ratio:1;background:#f4f4f4;color:#222;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;border-radius:3px}
+.r{background:#ef5350}.g{background:#66bb6a}.y{background:#ffee58}.b{background:#42a5f5}.safe{background:#ffd54a!important}
+button{background:#ffca28;border:0;border-radius:12px;padding:12px 22px;font-size:18px;font-weight:bold;margin:5px}
+#msg{min-height:25px}.small{font-size:12px;opacity:.75}
+</style>
+</head>
+<body>
+<div class="panel">
+<h1>🎲 SK LUDO</h1>
+<div id="msg">लाल खिलाड़ी की बारी</div>
+<div id="board"></div>
+<button onclick="dice()">🎲 पासा फेंको</button>
+<button onclick="reset()">🔄 नया गेम</button>
+<div id="result">पासा: -</div>
+<p class="small">यह 4-खिलाड़ी स्थानीय डेमो है। ऑनलाइन दोस्तों के लिए सर्वर जोड़ना होगा।</p>
+</div>
+<script>
+const board=document.getElementById('board');
+const colors=['r','g','y','b'], names=['लाल','हरा','पीला','नीला'];
+const path=[];
+for(let i=0;i<40;i++)path.push(i);
+let turn=0, rolls=0;
+for(let i=0;i<121;i++){
+ const c=document.createElement('div');c.className='cell';
+ const row=Math.floor(i/11),col=i%11;
+ if(row<4&&col<4)c.classList.add('r');
+ else if(row<4&&col>6)c.classList.add('g');
+ else if(row>6&&col<4)c.classList.add('b');
+ else if(row>6&&col>6)c.classList.add('y');
+ else if((row===5&&col===5)) {c.classList.add('safe');c.textContent='🏠';}
+ else {c.textContent='•';}
+ if((row===5||col===5)&&!(row===5&&col===5))c.style.background='#fff';
+ board.appendChild(c);
+}
+function dice(){
+ const n=Math.floor(Math.random()*6)+1;rolls++;
+ document.getElementById('result').textContent='पासा: '+n+' 🎲';
+ document.getElementById('msg').textContent=names[turn]+' खिलाड़ी को '+n+' आया';
+ if(n!==6)turn=(turn+1)%4;
+ else document.getElementById('msg').textContent+= ' — फिर से चाल!';
+}
+function reset(){turn=0;rolls=0;document.getElementById('result').textContent='पासा: -';document.getElementById('msg').textContent='लाल खिलाड़ी की बारी'}
+</script>
+</body>
+</html>
